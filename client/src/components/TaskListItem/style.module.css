@@ -1,0 +1,41 @@
+.title {
+  font-weight: 600;
+}
+
+.description {
+  opacity: 0.75;
+}
+
+.container {
+  display: flex;
+  flex-flow: column nowrap;
+  gap: var(--mantine-spacing-sm);
+  padding: var(--mantine-spacing-md) var(--mantine-spacing-md);
+}
+
+.completed {
+  opacity: 0.45;
+}
+.completed .description {
+  text-decoration: line-through;
+}
+.completed .title {
+  text-decoration: line-through;
+}
+
+.containerInner {
+  display: flex;
+  gap: var(--mantine-spacing-md);
+  align-items: flex-start;
+}
+
+.contentWrapper {
+  display: flex;
+  flex-flow: column nowrap;
+  gap: var(--mantine-spacing-xs);
+  flex: 1;
+}
+
+.favBtn {
+  width: 20px;
+}
