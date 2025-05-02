@@ -4,8 +4,10 @@ export namespace Task {
     title: string;
     description: string;
     completed: boolean;
-    created_at: string;
-    updated_at: string;
+    created_at?: string | null;
+    updated_at?: string | null;
+    due_time?: string | null;
+    due_date?: string | null;
   }
 
   export interface ITaskItemAdapter {
@@ -13,7 +15,9 @@ export namespace Task {
     title: string;
     description: string;
     completed: boolean;
-    createdAt: string;
-    updatedAt: string;
+    createdAt?: string;
+    updatedAt?: string;
+    dueTime?: string;
+    dueDate?: string;
   }
 }

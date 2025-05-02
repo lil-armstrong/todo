@@ -2,7 +2,7 @@
 
 import { create } from "zustand";
 import { ITaskState } from "./type";
-import { getTasks } from "@/api/task.api";
+import { createTask, getTasks } from "@/api/task.api";
 
 export const useTaskStore = create<ITaskState>()((set) => ({
   tasks: [],
@@ -19,7 +19,17 @@ export const useTaskStore = create<ITaskState>()((set) => ({
     }
   },
   addTask: async (task) => {
-    set((state) => ({ tasks: [...state.tasks, task] }));
+    set({ loading: true });
+
+    return createTask(task)
+      .then((newTask) => {
+        set((state) => ({
+          tasks: [...state.tasks, newTask],
+        }));
+      })
+      .finally(() => {
+        set({ loading: false });
+      });
   },
   updateTask: async (task) => {
     set((state) => ({

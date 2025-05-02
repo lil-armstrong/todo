@@ -11,11 +11,17 @@ import type { Task } from "@/types/task";
  * This function adds `created_at` and `updated_at` timestamps to the task object,
  * using the current date and time in ISO 8601 format.
  */
-function fromClientToServer(task: Task.ITaskItemAdapter): Task.ITaskItem {
+export function fromClientToServer(
+  task: PartialExcept<Task.ITaskItemAdapter, "title"> & { id?: string }
+): Omit<PartialExcept<Task.ITaskItem, "title">, "id"> {
   return {
-    ...task,
+    completed: task.completed || false,
+    description: task.description || "",
+    title: task.title,
     created_at: task.createdAt,
     updated_at: task.updatedAt,
+    due_time: task.dueTime,
+    due_date: task.dueDate,
   };
 }
 
@@ -27,20 +33,39 @@ function fromClientToServer(task: Task.ITaskItemAdapter): Task.ITaskItem {
  *          The `created_at` and `updated_at` fields from the server are converted to ISO string dates
  *          and assigned to `createdAt` and `updatedAt` respectively.
  */
-function fromServerToClient(task: Task.ITaskItem): Task.ITaskItemAdapter {
+export function fromServerToClient(
+  task: Task.ITaskItem
+): Task.ITaskItemAdapter {
   return {
-    ...task,
-    createdAt: task.created_at,
-    updatedAt: task.updated_at,
+    id: task.id,
+    title: task.title,
+    description: task.description,
+    completed: task.completed,
+    createdAt: task.created_at || undefined,
+    updatedAt: task.updated_at || undefined,
+    dueTime: task.due_time || undefined,
+    dueDate: task.due_date || undefined,
   };
 }
 
-export const getTasks = async () =>
-  await axiosInstance
+export async function getTasks() {
+  return await axiosInstance
     .get<Task.ITaskItem[]>("/tasks")
-    .then((response) => response.data.map((task) => fromServerToClient(task)));
+    .then(({ data }) => data.map((task) => fromServerToClient(task)));
+}
 
-export const patchTask = async (task: Task.ITaskItemAdapter) =>
-  await axiosInstance
-    .patch<Task.ITaskItem>(`/tasks/${task.id}`, fromClientToServer(task))
+export async function createTask(task: Omit<Task.ITaskItemAdapter, "id">) {
+  return axiosInstance
+    .post<Task.ITaskItem>(`/tasks`, fromClientToServer(task))
+    .then(({ data }) => fromServerToClient(data));
+}
+
+export async function patchTask(task: Task.ITaskItemAdapter) {
+  return await axiosInstance
+    .put<Task.ITaskItem>(`/tasks/${task.id}`, fromClientToServer(task))
     .then(() => task);
+}
+
+export async function deleteTask(taskId: string) {
+  return await axiosInstance.delete(`/tasks/${taskId}`).then(() => taskId);
+}
