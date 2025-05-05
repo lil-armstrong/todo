@@ -7,6 +7,7 @@ import {
   MantineProvider,
   mantineHtmlProps,
 } from "@mantine/core";
+import AddTask from "@/components/AddTask";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -21,12 +22,15 @@ export default function RootLayout({
   return (
     <html lang="en" {...mantineHtmlProps}>
       <head>
-        <ColorSchemeScript defaultColorScheme="auto"/>
+        <ColorSchemeScript defaultColorScheme="auto" />
       </head>
       <body>
-        <main>
-          <MantineProvider defaultColorScheme="auto" theme={theme}>{children}</MantineProvider>
-        </main>
+        <MantineProvider defaultColorScheme="auto" theme={theme}>
+          <main>
+            {children}
+            <AddTask />
+          </main>
+        </MantineProvider>
       </body>
     </html>
   );
