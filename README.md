@@ -2,7 +2,7 @@ This is a Todo-list API built using FastAPI, SQLite3 and sqlalchemy
 
 ### How to run the project
 
-This project holds both the server and client code for the todo app. You can identify them in the root directory of the project.
+This project comprises of both the server and client code for the todo app. You can identify them in the root directory of the project.
 
 - **Client:**
 The client application is built using NextJS and vitest. Feel free to explore the application directory.

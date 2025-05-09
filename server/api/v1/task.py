@@ -1,9 +1,10 @@
 from fastapi import APIRouter, status
 from schemas.task import TaskSchema
-from controller import task
+from controller.task import TaskController
 
 router = APIRouter()
 
+task = TaskController()
 
 @router.post(
     "/",

@@ -1,1 +1,2 @@
 logs/pytest-logs.txt
+.pytest_cache

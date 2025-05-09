@@ -3,6 +3,7 @@
   flex-direction: column;
   gap: 24px;
   padding: 24px;
+  align-items: flex-start;
 }
 
 .formContainer {
@@ -16,6 +17,14 @@
   width: calc(100% - 130px);
   background-color: var(--mantine-color-default);
   border-radius: 10px;
+  transition: all 0.3s ease-in-out;
+  transform: scale(0);
+  transform-origin: bottom right;
+
+  &.show {
+    /* animation: slideIn 0.3s ease-in-out forwards; */
+    transform: scale(100%);
+  }
 }
 
 .formDescription {
@@ -44,6 +53,14 @@
 }
 
 .title {
-    font-size: 1.25rem;
-    font-weight: 700;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.notification {
+  position: absolute;
+  right: 0;
+  top: -80px;
+  min-width: 100%;
+  max-width: 100px;
 }

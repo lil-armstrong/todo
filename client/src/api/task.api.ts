@@ -54,7 +54,9 @@ export async function getTasks() {
     .then(({ data }) => data.map((task) => fromServerToClient(task)));
 }
 
-export async function createTask(task: Omit<Task.ITaskItemAdapter, "id">) {
+export async function createTask(
+  task: PartialExcept<Omit<Task.ITaskItemAdapter, "id">, "title">
+) {
   return axiosInstance
     .post<Task.ITaskItem>(`/tasks`, fromClientToServer(task))
     .then(({ data }) => fromServerToClient(data));
