@@ -1,10 +1,13 @@
 from fastapi import APIRouter, status
-from schemas.task import TaskSchema
+
+from utils.app import db_session
+from schemas.task import TaskCreate, TaskRead, TaskUpdate
 from controller.task import TaskController
 
 router = APIRouter()
 
 task = TaskController()
+
 
 @router.post(
     "/",
@@ -13,11 +16,10 @@ task = TaskController()
     name="create_task",
     description="This endpoint handles the creation of a new task.",
     response_description="A dictionary containing the created task details.",
-    response_model=TaskSchema,
 )
-async def create_task(_task: TaskSchema):
+async def create_task(_task: TaskCreate, db=db_session):
     """Create a new task."""
-    return task.create_task(_task)
+    return task.create_task(task=_task, db=db)
 
 
 @router.get(
@@ -26,10 +28,10 @@ async def create_task(_task: TaskSchema):
     name="read_tasks",
     description="This endpoint handles the reading of tasks.",
     response_description="A list of dictionary containing a confirmation of the read operation.",
-    response_model=list[TaskSchema],
+    response_model=list[TaskRead],
 )
-async def read_tasks():
-    return task.read_tasks()
+async def read_tasks(db=db_session):
+    return task.read_tasks(db)
 
 
 @router.patch(
@@ -38,10 +40,10 @@ async def read_tasks():
     name="update_task",
     description="This endpoint handles the updating of a task.",
     response_description="A dictionary containing a confirmation of the update operation.",
-    response_model=TaskSchema,
+    response_model=TaskRead,
 )
-async def update_tasks(task_id: int, _task: TaskSchema):
-    return task.update_task(task_id, _task)
+async def update_tasks(task_id: int, _task: TaskUpdate, db=db_session):
+    return task.update_task(task_id, _task, db)
 
 
 @router.delete(
@@ -51,5 +53,5 @@ async def update_tasks(task_id: int, _task: TaskSchema):
     description="This endpoint handles the deletion of a task.",
     response_description="A dictionary containing a confirmation of the delete operation.",
 )
-async def delete_tasks(task_id: int):
-    return task.delete_task(task_id)
+async def delete_tasks(task_id: int, db=db_session):
+    return task.delete_task(task_id, db)

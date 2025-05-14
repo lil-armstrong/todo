@@ -1,4 +1,3 @@
-from .db import get_db
-from .app import app
+from .db import get_db, engine
 
-__all__ = ["get_db", "app"]
+__all__ = ["get_db", "engine"]

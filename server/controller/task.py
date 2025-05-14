@@ -1,43 +1,72 @@
-from schemas.task import TaskSchema
+from pydantic import ValidationError
+from sqlalchemy.orm import Session
+from sqlalchemy import select
+
+from schemas.task import TaskCreate, TaskUpdate
+from models.task import Task
+
 
 class TaskController:
     def __init__(self):
-        self.tasks = []
+        pass
 
-    def create_task(self, task: TaskSchema):
+    def create_task(self, task: TaskCreate, db: Session):
         """
         Create a new task in the database.
         """
-        self.tasks.append(task)
-        return task
+        try:
+            model = Task(**task.model_dump())
+            db.add(model)
+            db.commit()
+            db.refresh(model)
 
-    def read_tasks(self):
+            return model
+
+        except ValidationError as e:
+            print(e)
+
+    def read_tasks(self, db: Session):
         """
         Read all tasks from the database.
         """
-        return self.tasks
+        try:
+            result = db.execute(select(Task)).scalars()
 
-    def update_task(self, task_id: int, task: TaskSchema):
+            return result
+        except Exception as e:
+            print(e)
+
+    def update_task(self, task_id: int, task: TaskUpdate, db: Session):
         """
         Update a task in the database.
         Args:
             task_id (int): The ID of the task to update.
-            task (TaskSchema): The updated task data.
+            task (Task): The updated task data.
         """
-        if 0 <= task_id < len(self.tasks):
-            self.tasks[task_id] = task
-            return task
-        else:
-            raise IndexError("Task ID out of range")
+        try:
+            model = task.model_dump()
+            row = db.get(Task, task_id)
+            if row:
+                for key, value in model.items():
+                    setattr(row, key, value)
+                db.commit()
+                db.refresh(row)
 
-    def delete_task(self, task_id: int):
+                return row
+        except Exception as e:
+            print(e)
+
+    def delete_task(self, task_id: int, db: Session):
         """
         Delete a task from the database.
         Args:
             task_id (int): The ID of the task to delete.
         """
-        if 0 <= task_id < len(self.tasks):
-            del self.tasks[task_id]
-            return True
-        else:
-            raise IndexError("Task ID out of range")
+        try:
+            row = db.get(Task, task_id)
+
+            if row:
+                db.delete(row)
+                db.commit()
+        except Exception as e:
+            raise e
