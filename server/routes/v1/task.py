@@ -6,7 +6,7 @@ from controller.task import TaskController
 
 router = APIRouter()
 
-task = TaskController()
+controller = TaskController()
 
 
 @router.post(
@@ -16,10 +16,11 @@ task = TaskController()
     name="create_task",
     description="This endpoint handles the creation of a new task.",
     response_description="A dictionary containing the created task details.",
+    response_model=TaskRead,
 )
-async def create_task(_task: TaskCreate, db=db_session):
+async def create_task(payload: TaskCreate, db=db_session):
     """Create a new task."""
-    return task.create_task(task=_task, db=db)
+    return controller.create(payload, db)
 
 
 @router.get(
@@ -31,7 +32,7 @@ async def create_task(_task: TaskCreate, db=db_session):
     response_model=list[TaskRead],
 )
 async def read_tasks(db=db_session):
-    return task.read_tasks(db)
+    return controller.read(db)
 
 
 @router.patch(
@@ -42,8 +43,8 @@ async def read_tasks(db=db_session):
     response_description="A dictionary containing a confirmation of the update operation.",
     response_model=TaskRead,
 )
-async def update_tasks(task_id: int, _task: TaskUpdate, db=db_session):
-    return task.update_task(task_id, _task, db)
+async def update_tasks(task_id: int, payload: TaskUpdate, db=db_session):
+    return controller.update(task_id, payload, db)
 
 
 @router.delete(
@@ -54,4 +55,4 @@ async def update_tasks(task_id: int, _task: TaskUpdate, db=db_session):
     response_description="A dictionary containing a confirmation of the delete operation.",
 )
 async def delete_tasks(task_id: int, db=db_session):
-    return task.delete_task(task_id, db)
+    return controller.delete(task_id, db)

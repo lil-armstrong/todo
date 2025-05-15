@@ -10,7 +10,7 @@ class TaskController:
     def __init__(self):
         pass
 
-    def create_task(self, task: TaskCreate, db: Session):
+    def create(self, task: TaskCreate, db: Session):
         """
         Create a new task in the database.
         """
@@ -25,7 +25,7 @@ class TaskController:
         except ValidationError as e:
             print(e)
 
-    def read_tasks(self, db: Session):
+    def read(self, db: Session):
         """
         Read all tasks from the database.
         """
@@ -36,7 +36,7 @@ class TaskController:
         except Exception as e:
             print(e)
 
-    def update_task(self, task_id: int, task: TaskUpdate, db: Session):
+    def update(self, task_id: int, task: TaskUpdate, db: Session):
         """
         Update a task in the database.
         Args:
@@ -56,7 +56,7 @@ class TaskController:
         except Exception as e:
             print(e)
 
-    def delete_task(self, task_id: int, db: Session):
+    def delete(self, task_id: int, db: Session):
         """
         Delete a task from the database.
         Args:

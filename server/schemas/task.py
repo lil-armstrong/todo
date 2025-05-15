@@ -26,6 +26,7 @@ class TaskCreate(TaskBase):
 
 class TaskRead(TaskBase, ORM):
     id: int = Field(
+        frozen=True,
         description="ID of the task",
     )
     created_at: datetime | None = Field(

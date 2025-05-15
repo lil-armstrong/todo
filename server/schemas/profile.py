@@ -24,8 +24,8 @@ class ProfileRead(ProfileBase, ORM):
         frozen=True,
         description="ID of the profile",
     )
-    created_at: datetime = Field(description="Creation date of the task")
-    updated_at: datetime | None = Field(description="Last update date of the task")
+    created_at: datetime = Field(description="Creation date of the profile")
+    updated_at: datetime | None = Field(description="Last update date of the profile")
 
 class ProfileUpdate(ProfileRead):
     pass
