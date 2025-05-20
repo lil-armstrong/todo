@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
 from utils.app import db_session
-from controller.profile import Profile
+from controllers.profile import Profile
 from schemas.profile import ProfileCreate, ProfileUpdate, ProfileRead
 
 router = APIRouter()

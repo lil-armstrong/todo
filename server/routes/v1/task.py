@@ -2,7 +2,7 @@ from fastapi import APIRouter, status
 
 from utils.app import db_session
 from schemas.task import TaskCreate, TaskRead, TaskUpdate
-from controller.task import TaskController
+from controllers.task import TaskController
 
 router = APIRouter()
 
@@ -16,7 +16,26 @@ controller = TaskController()
     name="create_task",
     description="This endpoint handles the creation of a new task.",
     response_description="A dictionary containing the created task details.",
-    response_model=TaskRead,
+    responses={
+        400: {
+            "description": "Invalid input data.",
+            "content": {
+                "application/json": {"example": {"detail": "Invalid input data."}}
+            },
+        },
+        409: {
+            "description": "Task already exists.",
+            "content": {
+                "application/json": {"example": {"detail": "Task already exists."}}
+            },
+        },
+        500: {
+            "description": "Internal server error.",
+            "content": {
+                "application/json": {"example": {"detail": "Internal server error."}}
+            },
+        },
+    },
 )
 async def create_task(payload: TaskCreate, db=db_session):
     """Create a new task."""

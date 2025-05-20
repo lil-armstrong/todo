@@ -2,7 +2,7 @@ from datetime import datetime
 
 from pydantic import BaseModel, Field
 
-from schemas.orm import ORM
+from .orm import ORM
 
 
 class TaskBase(BaseModel):

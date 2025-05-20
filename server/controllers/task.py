@@ -1,9 +1,9 @@
-from pydantic import ValidationError
 from sqlalchemy.orm import Session
 from sqlalchemy import select
 
 from schemas.task import TaskCreate, TaskUpdate
 from models.task import Task
+from utils.exception import handle_request_exception
 
 
 class TaskController:
@@ -22,8 +22,8 @@ class TaskController:
 
             return model
 
-        except ValidationError as e:
-            print(e)
+        except Exception as e:
+            handle_request_exception(e)
 
     def read(self, db: Session):
         """
@@ -34,7 +34,7 @@ class TaskController:
 
             return result
         except Exception as e:
-            print(e)
+            handle_request_exception(e)
 
     def update(self, task_id: int, task: TaskUpdate, db: Session):
         """
@@ -54,7 +54,7 @@ class TaskController:
 
                 return row
         except Exception as e:
-            print(e)
+            handle_request_exception(e)
 
     def delete(self, task_id: int, db: Session):
         """
@@ -69,4 +69,4 @@ class TaskController:
                 db.delete(row)
                 db.commit()
         except Exception as e:
-            raise e
+            handle_request_exception(e)

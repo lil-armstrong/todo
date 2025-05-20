@@ -5,7 +5,7 @@ from sqlalchemy import String, DateTime, func
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import Mapped
 
-from models.base import Base
+from .base import Base
 from utils.db import engine
 
 
@@ -15,9 +15,7 @@ class Task(Base):
     id: Mapped[int] = mapped_column(primary_key=True, unique=True, autoincrement=True)
     title: Mapped[str] = mapped_column(String, nullable=False)
     description: Mapped[str] = mapped_column(String, nullable=True)
-    start_datetime: Mapped[datetime | None] = mapped_column(
-        DateTime(timezone=True)
-    )
+    start_datetime: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     end_datetime: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=True
     )
@@ -34,6 +32,3 @@ class Task(Base):
 
     # Relationship back to Profile
     # profile: Mapped["Profile"] = relationship(back_populates="tasks") # type: ignore  # noqa: F821
-
-
-Task.metadata.create_all(bind=engine)

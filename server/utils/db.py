@@ -1,23 +1,23 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from pathlib import Path
-from contextlib import asynccontextmanager
-
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
 from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy.orm import sessionmaker, Session
+from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
+from configs.base import get_settings
 
-db_path = Path(__file__).cwd() / "todo.db"
-_DATABASE_URL = f"sqlite:///{db_path.absolute()}"
+settings = get_settings()
+
+_DATABASE_URL = (
+    settings.live_database_url
+    if not settings.is_testing
+    else settings.test_database_url
+)
 
 engine = create_engine(
     _DATABASE_URL, connect_args={"check_same_thread": False}, echo=True
 )
 
-_SessionLocal = sessionmaker(
-    bind=engine, class_=Session
-)
+_SessionLocal = sessionmaker(bind=engine, autoflush=False)
 
 
 def get_db():
@@ -34,7 +34,7 @@ def get_db():
         yield session
     except SQLAlchemyError as e:
         session.rollback()
-        raise
+        raise e
     finally:
         session.close()
 
